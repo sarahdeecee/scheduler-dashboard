@@ -33,7 +33,9 @@ class Dashboard extends Component {
   };
 
   changeFocus = function(id) {
-    this.setState({focused: id});
+    this.setState(prev => ({
+      focused: prev.focused !== null ? null : id
+    }));
   };
 
   render() {
