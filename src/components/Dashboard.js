@@ -6,7 +6,8 @@ import {
   getLeastPopularTimeSlot,
   getMostPopularDay,
   getInterviewsPerDay
- } from "helpers/selectors";
+} from "helpers/selectors";
+import { setInterview } from "helpers/reducers";
 import classnames from "classnames";
 import axios from "axios";
 
@@ -63,6 +64,15 @@ class Dashboard extends Component {
     });
 
     this.socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+    this.socket.onmessage = event => {
+      const data = JSON.parse(event.data);
+    
+      if (typeof data === "object" && data.type === "SET_INTERVIEW") {
+        this.setState(previousState =>
+          setInterview(previousState, data.id, data.interview)
+        );
+      }
+    };
   }
 
   componentDidUpdate(previousProps, previousState) {
